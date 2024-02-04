@@ -18,6 +18,11 @@ class Translator:
     def __init__(self):
         pass
 
+    # 隐藏暂停按钮和取消按钮
+    def hide_pause_and_cancel_button():
+        Global.window.Widget_start_translation.A_settings.primaryButton_pause_translation.hide()
+        Global.window.Widget_start_translation.A_settings.primaryButton_cancel_translation.hide()
+
     def Main(self):
         # ——————————————————————————————————————————配置信息初始化—————————————————————————————————————————
         Global.configurator.initialize_configuration()
@@ -114,36 +119,43 @@ class Translator:
         # api_requester_instance = Api_Requester()
         # api_requester_instance.Concurrent_Request_Openai()
 
+        # 创建实例
+        api_requester_instance = Api_Requester()
+        if Global.configurator.translation_platform in ["Openai官方", "Openai代理"]:
+            task_func = api_requester_instance.Concurrent_Request_Openai
+        elif Global.configurator.translation_platform == "Google官方":
+            task_func = api_requester_instance.Concurrent_Request_Google
+        elif Global.configurator.translation_platform == "SakuraLLM":
+            task_func = api_requester_instance.Concurrent_Request_Sakura
+
         # 创建线程池
         The_Max_workers = Global.configurator.thread_counts  # 获取线程数配置
         with concurrent.futures.ThreadPoolExecutor(The_Max_workers) as executor:
-            # 创建实例
-            api_requester_instance = Api_Requester()
             # 向线程池提交任务
             for i in range(tasks_Num):
-                # 根据不同平台调用不同接口
-                if (
-                    Global.configurator.translation_platform == "Openai官方"
-                    or Global.configurator.translation_platform == "Openai代理"
-                ):
-                    executor.submit(api_requester_instance.Concurrent_Request_Openai)
+                # 判断是否暂停，如果暂停则等待
+                while Global.Running_status == 1011:
+                    time.sleep(1)
+                # 判断是否取消，如果取消则退出
+                if Global.Running_status == 10:
+                    Translator.hide_pause_and_cancel_button()
+                    Global.user_interface_prompter.signal.emit("翻译状态提示","取消翻译",0,0,0)
+                    return
 
-                elif Global.configurator.translation_platform == "Google官方":
-                    executor.submit(api_requester_instance.Concurrent_Request_Google)
-
-                elif Global.configurator.translation_platform == "SakuraLLM":
-                    executor.submit(api_requester_instance.Concurrent_Request_Sakura)
+                executor.submit(task_func)
 
             # 等待线程池任务完成
             executor.shutdown(wait=True)
 
-        # 检查主窗口是否已经退出
+        # 检查是否已经取消
         if Global.Running_status == 10:
+            Translator.hide_pause_and_cancel_button()
+            Global.user_interface_prompter.signal.emit("翻译状态提示","取消翻译",0,0,0)
             return
 
-        # 检查翻译任务是否已经暂停
-        if Global.Running_status == 1011:
-            pass
+        # 检查是否暂停，暂停则等待
+        while Global.Running_status == 1011:
+            time.sleep(1)
 
         # ——————————————————————————————————————————检查没能成功翻译的文本，拆分翻译————————————————————————————————————————
 
@@ -205,35 +217,31 @@ class Translator:
             # 创建线程池
             The_Max_workers = Global.configurator.thread_counts  # 获取线程数配置
             with concurrent.futures.ThreadPoolExecutor(The_Max_workers) as executor:
-                # 创建实例
-                api_requester_instance = Api_Requester()
                 # 向线程池提交任务
                 for i in range(tasks_Num):
-                    # 根据不同平台调用不同接口
-                    if (
-                        Global.configurator.translation_platform == "Openai官方"
-                        or Global.configurator.translation_platform == "Openai代理"
-                    ):
-                        executor.submit(
-                            api_requester_instance.Concurrent_Request_Openai
-                        )
-
-                    elif Global.configurator.translation_platform == "Google官方":
-                        executor.submit(
-                            api_requester_instance.Concurrent_Request_Google
-                        )
-
-                    elif Global.configurator.translation_platform == "SakuraLLM":
-                        executor.submit(
-                            api_requester_instance.Concurrent_Request_Sakura
-                        )
+                    # 如果暂停则等待
+                    while Global.Running_status == 1011:
+                        time.sleep(1)
+                    # 如果取消则退出
+                    if Global.Running_status == 10:
+                        Translator.hide_pause_and_cancel_button()
+                        Global.user_interface_prompter.signal.emit("翻译状态提示","取消翻译",0,0,0)
+                        return
+                    
+                    executor.submit(task_func)
 
                 # 等待线程池任务完成
                 executor.shutdown(wait=True)
 
-            # 检查主窗口是否已经退出
+            # 检查是否已经取消
             if Global.Running_status == 10:
+                Translator.hide_pause_and_cancel_button()
+                Global.user_interface_prompter.signal.emit("翻译状态提示","取消翻译",0,0,0)
                 return
+            
+            # 检查是否暂停，暂停则等待
+            while Global.Running_status == 1011:
+                time.sleep(1)
 
             # 检查是否已经达到重翻次数限制
             retry_translation_count = retry_translation_count + 1
@@ -363,6 +371,9 @@ class Translator:
 
         # 检查主窗口是否已经退出
         if Global.Running_status == 10:
+            # 隐藏暂停按钮和取消按钮
+            Global.window.Widget_Start_Translation_A.primaryButton_pause_translation.hide()
+            Global.window.Widget_Start_Translation_A.primaryButton_cancel_translation.hide()
             return
 
         print(

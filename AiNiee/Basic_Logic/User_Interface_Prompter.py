@@ -74,6 +74,12 @@ class User_Interface_Prompter(QObject):
                 self.stateTooltip.setContent("已经翻译完成啦 😆")
                 self.stateTooltip.setState(True)
                 self.stateTooltip = None
+            # 取消翻译
+            elif input_str2 == "取消翻译":
+                self.stateTooltip.setTitle("取消")
+                self.stateTooltip.setContent("已经取消翻译 😭")
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
 
         elif input_str1 == "初始化翻译界面数据":
             # 更新翻译项目信息

@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QFrame, QGroupBox, QHBoxLayout, QLabel, QVBoxLayout
 from PyQt5.QtCore import Qt
 from qfluentwidgets import ProgressRing, PrimaryPushButton, FluentIcon as FIF
 
+from ..Basic_Logic.Background_Executor import Background_Executor
 from ..Global import Global
 
 
@@ -212,8 +213,24 @@ class Widget_Start_Translation_A(QFrame):  #  开始翻译子界面
             self.Start_translation_mtool
         )  # 按钮绑定槽函数
 
+        # 设置“暂停翻译”的按钮，只有Running_status为6时显示
+        self.primaryButton_pause_translation = PrimaryPushButton("暂停翻译", self, FIF.PAUSE)
+        self.primaryButton_pause_translation.hide()
+        self.primaryButton_pause_translation.clicked.connect(
+            self.Pause_translation_mtool
+        )
+
+        # 设置“取消翻译”的按钮，只有Running_status为6时显示
+        self.primaryButton_cancel_translation = PrimaryPushButton("取消翻译", self, FIF.CANCEL)
+        self.primaryButton_cancel_translation.hide()
+        self.primaryButton_cancel_translation.clicked.connect(
+            self.Cancel_translation_mtool
+        )
+
         layout_start_translation.addStretch(1)  # 添加伸缩项
         layout_start_translation.addWidget(self.primaryButton_start_translation)
+        layout_start_translation.addWidget(self.primaryButton_pause_translation)
+        layout_start_translation.addWidget(self.primaryButton_cancel_translation)
         layout_start_translation.addStretch(1)  # 添加伸缩项
         box_start_translation.setLayout(layout_start_translation)
 
@@ -239,11 +256,39 @@ class Widget_Start_Translation_A(QFrame):  #  开始翻译子界面
     # 开始翻译按钮绑定函数
     def Start_translation_mtool(self):
         if Global.Running_status == 0:
+            # 显示暂停和取消按钮
+            self.primaryButton_pause_translation.show()
+            self.primaryButton_cancel_translation.show()
+
             # 创建子线程
-            thread = Global.background_executor("执行翻译任务")
+            thread = Background_Executor("执行翻译任务")
             thread.start()
 
         elif Global.Running_status != 0:
             Global.user_interface_prompter.createWarningInfoBar(
                 "正在进行任务中，请等待任务结束后再操作~"
             )
+
+    # 暂停翻译按钮绑定函数
+    def Pause_translation_mtool(self):
+        # 判断Running_status是否为6
+        if Global.Running_status == 6:
+            Global.Running_status = 1011
+            self.primaryButton_pause_translation.setText("继续翻译")
+            Global.user_interface_prompter.createSuccessInfoBar("已暂停翻译任务")
+        # 如果为1101，则继续翻译
+        elif Global.Running_status == 1011:
+            Global.Running_status = 6
+            self.primaryButton_pause_translation.setText("暂停翻译")
+            Global.user_interface_prompter.createSuccessInfoBar("已继续翻译任务")
+        else:
+            Global.user_interface_prompter.createWarningInfoBar("当前无翻译任务")
+
+    # 取消翻译按钮绑定函数
+    def Cancel_translation_mtool(self):
+        # 判断Running_status是否为6
+        if Global.Running_status == 6 or Global.Running_status == 1011:
+            Global.Running_status = 10
+            Global.user_interface_prompter.createSuccessInfoBar("已取消翻译任务，当前正在运行的线程无法停止，请等待线程执行完毕")
+        else:
+            Global.user_interface_prompter.createWarningInfoBar("当前无翻译任务")

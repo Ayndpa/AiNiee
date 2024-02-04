@@ -26,7 +26,7 @@ class Widget_Sponsor(QFrame):  # 赞助界面
         # 调整 QLabel 大小以适应图片
         self.image_label.setPixmap(pixmap)
         self.image_label.setScaledContents(True)
-
+        
         layout1.addWidget(self.image_label)
         box1.setLayout(layout1)
 

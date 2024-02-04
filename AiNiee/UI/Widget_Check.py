@@ -10,8 +10,9 @@ from qfluentwidgets import (
     DoubleSpinBox,
 )
 from qfluentwidgets import FluentIcon as FIF
-from ..Basic_Logic.File_Reader import File_Reader
 
+from ..Basic_Logic.Background_Executor import Background_Executor
+from ..Basic_Logic.File_Reader import File_Reader
 from ..Global import Global
 
 
@@ -264,7 +265,7 @@ class Widget_Check(QFrame):  # 错行检查界面
     def Start_check(self):
         if Global.Running_status == 0:
             # 创建子线程
-            thread = Global.background_executor("执行检查任务")
+            thread = Background_Executor("执行检查任务")
             thread.start()
 
         elif Global.Running_status != 0:

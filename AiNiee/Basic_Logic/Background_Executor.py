@@ -39,6 +39,8 @@ class Background_Executor(threading.Thread):
         elif self.task_id == "执行翻译任务":
             Global.Running_status = 6
             Translator.Main(self)
+            # 隐藏暂停和取消按钮
+            Translator.hide_pause_and_cancel_button()
             Global.Running_status = 0
         # 执行检查任务
         elif self.task_id == "执行检查任务":

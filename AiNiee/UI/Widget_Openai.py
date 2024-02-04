@@ -16,6 +16,7 @@ from qfluentwidgets import (
     FluentIcon as FIF,
 )
 
+from ..Basic_Logic.Background_Executor import Background_Executor
 from ..Global import Global
 
 
@@ -211,7 +212,7 @@ class Widget_Openai(QFrame):  #  Openai账号界面
     def test_request(self):
         if Global.Running_status == 0:
             # 创建子线程
-            thread = Global.background_executor("openai官方接口测试")
+            thread = Background_Executor("openai官方接口测试")
             thread.start()
 
         elif Global.Running_status != 0:

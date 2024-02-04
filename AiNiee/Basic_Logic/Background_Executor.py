@@ -4,6 +4,7 @@ from .Translator import Translator
 
 from ..Global import Global
 
+
 # 任务分发器(后台运行)
 class Background_Executor(threading.Thread):
     def __init__(self, task_id):

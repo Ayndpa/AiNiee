@@ -137,7 +137,10 @@ class Api_Requester:
             )
 
             # 如果没有取消
-            if request_tokens_consume >= Global.request_limiter.max_tokens and Global.Running_status != 1011:
+            if (
+                request_tokens_consume >= Global.request_limiter.max_tokens
+                and Global.Running_status != 1011
+            ):
                 print("\033[1;31mError:\033[0m 该条消息总tokens数大于单条消息最大数量")
                 print("\033[1;31mError:\033[0m 该条消息取消任务，进行拆分翻译")
                 return
@@ -545,7 +548,10 @@ class Api_Requester:
                 self, Original_text
             )
 
-            if request_tokens_consume >= Global.request_limiter.max_tokens:
+            if (
+                request_tokens_consume >= Global.request_limiter.max_tokens
+                and Global.Running_status != 1011
+            ):
                 print(
                     "\033[1;33mWarning:\033[0m 该条消息总tokens数大于单条消息最大数量"
                 )
@@ -1090,7 +1096,10 @@ class Api_Requester:
                 self, Original_text
             )  # 加上2%的修正系数
 
-            if request_tokens_consume >= Global.request_limiter.max_tokens:
+            if (
+                request_tokens_consume >= Global.request_limiter.max_tokens
+                and Global.Running_status != 1011
+            ):
                 print("\033[1;31mError:\033[0m 该条消息总tokens数大于单条消息最大数量")
                 print("\033[1;31mError:\033[0m 该条消息取消任务，进行拆分翻译")
                 return

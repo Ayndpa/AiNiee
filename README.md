@@ -8,16 +8,17 @@
 [![下载地址](https://img.shields.io/badge/下载地址-点击下载-1E90FF)](https://github.com/NEKOparapa/AiNiee/releases)
 [![教程视频](https://img.shields.io/badge/教程视频-点击观看-ff69b4)](https://www.bilibili.com/video/BV18c411K7WN)
 
-**这是一款基于`Mtool`或`Translator++`的 AI自动批翻译工具,主要是用来翻译各种RPG游戏**
+**这是修改过的 AiNiee。AiNiee 是一款基于`Mtool`或`Translator++`的 AI 自动批翻译工具，主要是用来翻译各种 RPG 游戏。**
 
+*"This is the modified AiNiee. Artificial Intelligence Narrative Interpretation and Exploration Engine?"*
 
-*Artificial Intelligence Narrative Interpretation and Exploration Engine？*
-  
-# 声明🧾 
+# 🧾声明
 ***
-该款AI翻译工具仅供个人合法用途,任何使用该工具进行直接或者间接非法盈利活动的行为,均不属于授权范围,也不受到任何支持和认可。
+请您注意，您正在使用的是由AiNiee个人修改的版本，这款软件是基于AiNiee的开源代码进行修改的。如果在使用过程中遇到任何问题，我们恳请您不要打扰AiNiee的原开发者。
 
-* **`交♂交流群`**:  QQ交流群：821624890，备用QQ群：729610150，备用TG群：https://t.me/+JVHbDSGo8SI2Njhl ,
+原Github项目地址：[点击这里](https://github.com/NEKOparapa/AiNiee)
+
+请您在使用本软件时，遵守相关法律法规，不得用于任何直接或间接的非法盈利活动。我们不会对此类行为提供任何支持或认可。
 
 #  环境支持🏕️
 ***
@@ -235,9 +236,3 @@ https://github.com/Abcuders/AutoAnimeMv
 
  * txt2json4AiNiee 一个简单的可以把 txt 文本转换成 AiNiee 喜欢的 MTool JSON 格式的小 Python Script。在 AiNiee 的翻译小说功能做完之前可以先拿来用。
 https://github.com/AkiraChisaka/txt2json4AiNiee
-
-# 感谢💖
-[![xxxx](https://raw.githubusercontent.com/NEKOparapa/AiNiee-chatgpt/main/Example%20image/Sponsor/徽章.png)](https://raw.githubusercontent.com/NEKOparapa/AiNiee-chatgpt/main/Example%20image/Sponsor/赞赏码.png)
-
-都是为这个工具做出各种贡献的朋友，以下排名不分先后
->下划线君，孤狼，Takakura Anri，Amegi，hola，旧日，OYcedar，Abcuders，ChristinaA2M，adastra9257，NEKOparapa, Akira

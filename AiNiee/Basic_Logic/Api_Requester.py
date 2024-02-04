@@ -77,7 +77,7 @@ class Api_Requester:
                 print("[INFO]  已添加用户译文示例", translation_example_3)
 
         # 如果开启了保留换行符功能
-        if Global.configurator.preserve_line_breaks_toggle:
+        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
             print("[INFO] 你开启了保留换行符功能，正在进行替换", "\n")
             source_text_dict = Cache_Manager.replace_special_characters(
                 self, source_text_dict, "替换"
@@ -302,7 +302,7 @@ class Api_Requester:
                         )  # 注意转化为字典的数字序号key是字符串类型
 
                         # 如果开启了保留换行符功能
-                        if Global.configurator.preserve_line_breaks_toggle:
+                        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
                             response_dict = Cache_Manager.replace_special_characters(
                                 self, response_dict, "还原"
                             )
@@ -489,7 +489,7 @@ class Api_Requester:
                 print("[INFO]  已添加用户译文示例", translation_example_3)
 
         # 如果开启了保留换行符功能
-        if Global.configurator.preserve_line_breaks_toggle:
+        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
             print("[INFO] 你开启了保留换行符功能，正在进行替换", "\n")
             source_text_dict = Cache_Manager.replace_special_characters(
                 self, source_text_dict, "替换"
@@ -715,7 +715,7 @@ class Api_Requester:
                         )  # 注意转化为字典的数字序号key是字符串类型
 
                         # 如果开启了保留换行符功能
-                        if Global.configurator.preserve_line_breaks_toggle:
+                        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
                             response_dict = Cache_Manager.replace_special_characters(
                                 self, response_dict, "还原"
                             )
@@ -1033,7 +1033,7 @@ class Api_Requester:
                     print("[INFO]  已添加用户译文示例", translation_example_3)
 
         # 如果开启了保留换行符功能
-        if Global.configurator.preserve_line_breaks_toggle:
+        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
             print("[INFO] 你开启了保留换行符功能，正在进行替换", "\n")
             source_text_dict = Cache_Manager.replace_special_characters(
                 self, source_text_dict, "替换"
@@ -1245,7 +1245,7 @@ class Api_Requester:
                         )  # 注意转化为字典的数字序号key是字符串类型
 
                         # 如果开启了保留换行符功能
-                        if Global.configurator.preserve_line_breaks_toggle:
+                        if Global.configurator.preserve_line_breaks_toggle and Global.Running_status == 6:
                             response_dict = Cache_Manager.replace_special_characters(
                                 self, response_dict, "还原"
                             )

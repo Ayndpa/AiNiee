@@ -32,21 +32,21 @@ class Translator:
         # 读取文件
         Input_Folder = Global.configurator.Input_Folder
         if Global.configurator.translation_project == "Mtool导出文件":
-            cache_list = File_Reader.read_mtool_files(self, folder_path=Input_Folder)
+            Global.cache_list = File_Reader.read_mtool_files(self, folder_path=Input_Folder)
         elif Global.configurator.translation_project == "T++导出文件":
-            cache_list = File_Reader.read_xlsx_files(self, folder_path=Input_Folder)
+            Global.cache_list = File_Reader.read_xlsx_files(self, folder_path=Input_Folder)
         elif Global.configurator.translation_project == "Ainiee缓存文件":
-            cache_list = File_Reader.read_cache_files(self, folder_path=Input_Folder)
+            Global.cache_list = File_Reader.read_cache_files(self, folder_path=Input_Folder)
 
         # 将浮点型，整数型文本内容变成字符型文本内容
-        Cache_Manager.convert_source_text_to_str(self, cache_list)
+        Cache_Manager.convert_source_text_to_str(self, Global.cache_list)
 
         # 如果翻译日语或者韩语文本时，则去除非中日韩文本
         Text_Source_Language = (
             Global.window.Widget_translation_settings.A_settings.comboBox_source_text.currentText()
         )
         if Text_Source_Language == "日语" or Text_Source_Language == "韩语":
-            Cache_Manager.process_dictionary_list(self, cache_list)
+            Cache_Manager.process_dictionary_list(self, Global.cache_list)
 
         # ——————————————————————————————————————————构建并发任务池子—————————————————————————————————————————
 
@@ -55,7 +55,7 @@ class Translator:
             Global.configurator.text_line_counts
         )  # 获取每次翻译行数配置
         total_text_line_count = Cache_Manager.count_translation_status_0(
-            self, cache_list
+            self, Global.cache_list
         )
 
         if total_text_line_count % line_count_configuration == 0:
@@ -64,7 +64,7 @@ class Translator:
             tasks_Num = total_text_line_count // line_count_configuration + 1
 
         # 更新界面UI信息，并输出各种配置信息
-        project_id = cache_list[0]["project_id"]
+        project_id = Global.cache_list[0]["project_id"]
         Global.user_interface_prompter.signal.emit(
             "初始化翻译界面数据", project_id, total_text_line_count, 0, 0
         )  # 需要输入够当初设定的参数个数
@@ -161,7 +161,7 @@ class Translator:
 
         # 计算未翻译文本的数量
         untranslated_text_line_count = (
-            Cache_Manager.count_and_update_translation_status_0_2(self, cache_list)
+            Cache_Manager.count_and_update_translation_status_0_2(self, Global.cache_list)
         )
 
         # 重新翻译次数限制
@@ -254,7 +254,7 @@ class Translator:
 
             # 重新计算未翻译文本的数量
             untranslated_text_line_count = (
-                Cache_Manager.count_and_update_translation_status_0_2(self, cache_list)
+                Cache_Manager.count_and_update_translation_status_0_2(self, Global.cache_list)
             )
 
         # ——————————————————————————————————————————将数据处理并保存为文件—————————————————————————————————————————
@@ -270,8 +270,8 @@ class Translator:
                 or Global.configurator.target_language == "繁中"
             ):
                 try:
-                    cache_list = File_Outputter.simplified_and_traditional_conversion(
-                        self, cache_list, Global.configurator.target_language
+                    Global.cache_list = File_Outputter.simplified_and_traditional_conversion(
+                        self, Global.cache_list, Global.configurator.target_language
                     )
                     print(
                         f"\033[1;32mSuccess:\033[0m  文本转化{Global.configurator.target_language}完成-----------------------------------",
@@ -288,16 +288,16 @@ class Translator:
         output_path = Global.configurator.Output_Folder
 
         if Global.configurator.translation_project == "Mtool导出文件":
-            File_Outputter.output_json_file(self, cache_list, output_path)
+            File_Outputter.output_json_file(self, Global.cache_list, output_path)
 
         elif Global.configurator.translation_project == "T++导出文件":
-            File_Outputter.output_excel_file(self, cache_list, output_path)
+            File_Outputter.output_excel_file(self, Global.cache_list, output_path)
 
         elif Global.configurator.translation_project == "Ainiee缓存文件":
-            if cache_list[0]["project_type"] == "Mtool":
-                File_Outputter.output_json_file(self, cache_list, output_path)
+            if Global.cache_list[0]["project_type"] == "Mtool":
+                File_Outputter.output_json_file(self, Global.cache_list, output_path)
             else:
-                File_Outputter.output_excel_file(self, cache_list, output_path)
+                File_Outputter.output_excel_file(self, Global.cache_list, output_path)
 
         print(
             "\033[1;32mSuccess:\033[0m  译文文件写入完成-----------------------------------",
@@ -327,17 +327,17 @@ class Translator:
         # 读取文件
         Input_Folder = Global.configurator.Input_Folder
         if Global.configurator.translation_project == "Mtool导出文件":
-            cache_list = File_Reader.read_mtool_files(self, folder_path=Input_Folder)
+            Global.cache_list = File_Reader.read_mtool_files(self, folder_path=Input_Folder)
         elif Global.configurator.translation_project == "T++导出文件":
-            cache_list = File_Reader.read_xlsx_files(self, folder_path=Input_Folder)
+            Global.cache_list = File_Reader.read_xlsx_files(self, folder_path=Input_Folder)
 
         # —————————————————————————————————————处理读取的文件——————————————————————————————————————————
 
         # 将浮点型，整数型文本内容变成字符型文本内容
-        Cache_Manager.convert_source_text_to_str(self, cache_list)
+        Cache_Manager.convert_source_text_to_str(self, Global.cache_list)
 
         # 统计已翻译文本的tokens总量，并根据不同项目修改翻译状态
-        tokens_consume_all = Cache_Manager.count_tokens(self, cache_list)
+        tokens_consume_all = Cache_Manager.count_tokens(self, Global.cache_list)
 
         # —————————————————————————————————————创建并发嵌入任务——————————————————————————————————————————
 
@@ -349,7 +349,7 @@ class Translator:
         # 初始化一下界面提示器里面存储的相关变量
         Global.user_interface_prompter.translated_line_count = 0
         Global.user_interface_prompter.total_text_line_count = (
-            Cache_Manager.count_translation_status_0(self, cache_list)
+            Cache_Manager.count_translation_status_0(self, Global.cache_list)
         )
 
         # 测试用
@@ -392,14 +392,14 @@ class Translator:
         count_error = 0  # 错误文本计数变量
 
         # 把等于3的翻译状态改为0
-        for item in cache_list:
+        for item in Global.cache_list:
             if item.get("translation_status") == 3:
                 item["translation_status"] = 0
 
         # 统计翻译状态为0的文本数
-        List_len = Cache_Manager.count_translation_status_0(self, cache_list)
+        List_len = Cache_Manager.count_translation_status_0(self, Global.cache_list)
 
-        for entry in cache_list:
+        for entry in Global.cache_list:
             translation_status = entry.get("translation_status")
 
             if translation_status == 0:
@@ -588,7 +588,7 @@ class Translator:
         # 初始化一下界面提示器里面存储的相关变量
         Global.user_interface_prompter.translated_line_count = 0
         Global.user_interface_prompter.total_text_line_count = (
-            Cache_Manager.count_translation_status_0(self, cache_list)
+            Cache_Manager.count_translation_status_0(self, Global.cache_list)
         )
 
         # —————————————————————————————————————开始重新翻译——————————————————————————————————————————
@@ -597,7 +597,7 @@ class Translator:
         Number_of_iterations = 0
 
         # 计算需要翻译文本的数量
-        count_not_Translate = Cache_Manager.count_translation_status_0(self, cache_list)
+        count_not_Translate = Cache_Manager.count_translation_status_0(self, Global.cache_list)
 
         while count_not_Translate != 0:
 
@@ -626,7 +626,7 @@ class Translator:
 
             # 重新计算未翻译文本的数量
             count_not_Translate = Cache_Manager.count_and_update_translation_status_0_2(
-                self, cache_list
+                self, Global.cache_list
             )
 
             # 记录循环次数
@@ -651,7 +651,7 @@ class Translator:
         # 将翻译结果写为文件
         output_path = Global.configurator.Output_Folder
 
-        File_Outputter.output_translated_content(self, cache_list, output_path)
+        File_Outputter.output_translated_content(self, Global.cache_list, output_path)
 
         # —————————————————————————————————————全部翻译完成——————————————————————————————————————————
         print(

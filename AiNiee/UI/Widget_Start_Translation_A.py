@@ -275,11 +275,15 @@ class Widget_Start_Translation_A(QFrame):  #  开始翻译子界面
         if Global.Running_status == 6:
             Global.Running_status = 1011
             self.primaryButton_pause_translation.setText("继续翻译")
+            # 图标设置为继续
+            self.primaryButton_pause_translation.setIcon(FIF.PLAY)
             Global.user_interface_prompter.createSuccessInfoBar("已暂停翻译任务")
         # 如果为1101，则继续翻译
         elif Global.Running_status == 1011:
             Global.Running_status = 6
             self.primaryButton_pause_translation.setText("暂停翻译")
+            # 图标设置为继续
+            self.primaryButton_pause_translation.setIcon(FIF.PAUSE)
             Global.user_interface_prompter.createSuccessInfoBar("已继续翻译任务")
         else:
             Global.user_interface_prompter.createWarningInfoBar("当前无翻译任务")

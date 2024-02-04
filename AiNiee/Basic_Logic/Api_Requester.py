@@ -136,7 +136,8 @@ class Api_Requester:
                 self, Original_text
             )
 
-            if request_tokens_consume >= Global.request_limiter.max_tokens:
+            # 如果没有取消
+            if request_tokens_consume >= Global.request_limiter.max_tokens and Global.Running_status != 1011:
                 print("\033[1;31mError:\033[0m 该条消息总tokens数大于单条消息最大数量")
                 print("\033[1;31mError:\033[0m 该条消息取消任务，进行拆分翻译")
                 return
@@ -149,9 +150,13 @@ class Api_Requester:
             model_degradation = False  # 模型退化检测
 
             while 1:
-                # 检查主窗口是否已经退出---------------------------------
+                # 检查是否取消
                 if Global.Running_status == 10:
                     return
+                # 检查是否暂停
+                if Global.Running_status == 1011:
+                    time.sleep(1)
+                    continue
 
                 # 检查子线程运行是否超时---------------------------------
                 if time.time() - start_time > timeout:
@@ -554,9 +559,13 @@ class Api_Requester:
             Wrong_answer_count = 0  # 设置错误回复次数限制
 
             while 1:
-                # 检查主窗口是否已经退出---------------------------------
+                # 检查是否取消
                 if Global.Running_status == 10:
                     return
+                # 检查是否暂停
+                if Global.Running_status == 1011:
+                    time.sleep(1)
+                    continue
 
                 # 检查子线程运行是否超时---------------------------------
                 if time.time() - start_time > timeout:
@@ -833,9 +842,13 @@ class Api_Requester:
 
             # ——————————————————————————————————————————开始循环请求，直至成功或失败——————————————————————————————————————————
             while 1:
-                # 检查主窗口是否已经退出---------------------------------
+                # 检查是否取消
                 if Global.Running_status == 10:
                     return
+                # 检查是否暂停
+                if Global.Running_status == 1011:
+                    time.sleep(1)
+                    continue
 
                 # 检查是否符合速率限制---------------------------------
                 if Global.request_limiter.RPM_and_TPM_limit(accumulated_tokens):
@@ -1090,9 +1103,13 @@ class Api_Requester:
             model_degradation = False  # 模型退化检测
 
             while 1:
-                # 检查主窗口是否已经退出---------------------------------
+                # 检查是否取消
                 if Global.Running_status == 10:
                     return
+                # 检查是否暂停
+                if Global.Running_status == 1011:
+                    time.sleep(1)
+                    continue
 
                 # 检查子线程运行是否超时---------------------------------
                 if time.time() - start_time > timeout:
